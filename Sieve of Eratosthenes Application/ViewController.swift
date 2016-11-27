@@ -81,6 +81,7 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
 
     
     func runSievesAlgo(){
+        
         var sqrtN = sqrt(Double(collectionViewSize))
         if sqrtN % 1 == 0{
             sqrtN -= 1
@@ -88,8 +89,8 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
             sqrtN = round(sqrtN)
         }
         
-        var delayTime : UInt64 = 1
-        let delayTimeChange : UInt64 = 1
+        var delayTime : NSTimeInterval = 1
+        let delayTimeChange : NSTimeInterval = 0.3
         
         for i in 2...Int(sqrtN){
             let indexPath = NSIndexPath(forItem: i - 2, inSection: 0)
@@ -99,14 +100,27 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
                 var j = iSquared
                 var k = 0
                 
+                print("In for loop")
+                
                 while j < collectionViewSize{
+                    
+                    print("In while loop")
                     
                     let a = j
                     delayTime += delayTimeChange
-                    let time = Int64(delayTime * NSEC_PER_SEC)
-                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, time)
-                    print(time)
-                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {self.removeItemAtIndex(a)})
+                    let newDelay = delayTime
+                    let delay = dispatch_time(DISPATCH_TIME_NOW,
+                        Int64(newDelay * Double(NSEC_PER_SEC)))
+                    
+                    usleep(5000)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.removeItemAtIndex(a)
+                    })
+                    
+                    
+//                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, delay)
+
+//                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {self.removeItemAtIndex(a)})
                     k++
                     j =  iSquared + (k*i)
                     
@@ -126,7 +140,12 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
             if let num : Int = try Int(numString!) {
                 //collectionViewSize = num
                 
-                runSievesAlgo()
+                let qualityOfServiceClass = QOS_CLASS_BACKGROUND
+                let backgroundQueue = dispatch_get_global_queue(qualityOfServiceClass, 0)
+                dispatch_async(backgroundQueue, {
+                    self.runSievesAlgo()
+                })
+                
                 return true
             }
         }catch {
@@ -142,8 +161,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         print("here\(i)")
         nonPrimeNumbers.append(i)
         let indexPath = NSIndexPath(forItem: i - 2, inSection: 0)
-        let cell = numbersCollection.cellForItemAtIndexPath(indexPath)
-        cell?.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.5)
         numbersCollection.reloadItemsAtIndexPaths([indexPath])
     }
     
