@@ -46,6 +46,10 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
             sqrtN = round(sqrtN)
         }
         
+        if sqrtN <= 2{
+            sqrtN = 3
+        }
+        
         for i in 2...Int(sqrtN){
             if !nonPrimeNumbers.contains(i - 2){
                 let iSquared = Int(pow(Double(i), 2.0))
