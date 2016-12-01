@@ -59,10 +59,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        
-        
-    }
     
     
     func runSievesAlgo(){
