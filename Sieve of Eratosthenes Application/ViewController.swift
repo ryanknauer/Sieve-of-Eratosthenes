@@ -25,9 +25,9 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         
         self.view.backgroundColor = UIColor.whiteColor()
         collectionViewSize = 0
-        setupCollectionView()
         
-
+        setupCollectionView()
+        view.addSubview(numbersCollection)
         
         setupInstructionsLabel()
         view.addSubview(instructionsLabel)
@@ -35,30 +35,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         setupTextField()
         view.addSubview(textField)
     }
-    
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionViewSize - 1
-    }
-    
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
-        let cell =  collectionView.dequeueReusableCellWithReuseIdentifier("numberCell", forIndexPath: indexPath) as! NumberCell
-        
-        cell.label.text = String(indexPath.item + 2)
-        
-        
-        if nonPrimeNumbers.contains(indexPath.item + 2){
-            cell.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-        } else{
-            cell.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
-        }
-        
-        return cell
-        
-    }
-    
     
     
     func runSievesAlgo(){
@@ -96,7 +72,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     }
     
 
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
         textField.endEditing(true)
@@ -128,21 +103,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     }
     
     
-    func setupCollectionView() {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        flowLayout.itemSize = CGSize(width: 50, height: 50)
-        
-        let frame = view.frame
-        numbersCollection = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
-        numbersCollection.delegate = self
-        numbersCollection.dataSource = self
-        numbersCollection.registerClass(NumberCell.self, forCellWithReuseIdentifier: "numberCell")
-        numbersCollection.backgroundColor = UIColor.whiteColor()
-        view.addSubview(numbersCollection)
-    }
-    
-    
     func slideInAllCells(){
         CATransaction.begin()
         for i in 0..<collectionViewSize{
@@ -162,6 +122,45 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     }
     
     
+    func hideLabels(){
+        slideInAnimation(textField, inFrom: .bottom, slideOut: true)
+        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: true)
+    }
+    
+    
+    func showLabeles(){
+        textField.text = ""
+        slideInAnimation(textField, inFrom: .bottom, slideOut: false)
+        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: false)
+    }
+    
+    
+    func setupCollectionView() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        flowLayout.itemSize = CGSize(width: 50, height: 50)
+        
+        let frame = view.frame
+        numbersCollection = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
+        numbersCollection.delegate = self
+        numbersCollection.dataSource = self
+        numbersCollection.registerClass(NumberCell.self, forCellWithReuseIdentifier: "numberCell")
+        numbersCollection.backgroundColor = UIColor.whiteColor()
+    }
+    
+    
+    func setupInstructionsLabel(){
+        let labelHeight = view.frame.height / 7
+        let labelY = (view.frame.height / 2) - labelHeight
+        instructionsLabel.frame = CGRect(x: 0, y: labelY, width: view.frame.width, height: view.frame.height / 7)
+        instructionsLabel.text = "Please Insert A Number:"
+        instructionsLabel.textAlignment = .Center
+        instructionsLabel.numberOfLines = 0
+        instructionsLabel.font = UIFont(name: "Helvetica", size: 25)
+        instructionsLabel.textColor = UIColor.blackColor().colorWithAlphaComponent(0.65)
+    }
+    
+    
     func setupTextField(){
         textFieldWidth = view.frame.width
         textFieldHeight = 50
@@ -178,30 +177,33 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         textField.textAlignment = .Center
         textField.delegate = self
     }
+
+}
+
+
+extension ViewController {
     
     
-    func hideLabels(){
-        slideInAnimation(textField, inFrom: .bottom, slideOut: true)
-        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: true)
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collectionViewSize - 1
     }
     
     
-    func showLabeles(){
-        textField.text = ""
-        slideInAnimation(textField, inFrom: .bottom, slideOut: false)
-        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: false)
-    }
-    
-    
-    func setupInstructionsLabel(){
-        let labelHeight = view.frame.height / 7
-        let labelY = (view.frame.height / 2) - labelHeight
-        instructionsLabel.frame = CGRect(x: 0, y: labelY, width: view.frame.width, height: view.frame.height / 7)
-        instructionsLabel.text = "Please Insert A Number:"
-        instructionsLabel.textAlignment = .Center
-        instructionsLabel.numberOfLines = 0
-        instructionsLabel.font = UIFont(name: "Helvetica", size: 25)
-        instructionsLabel.textColor = UIColor.blackColor().colorWithAlphaComponent(0.65)
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell =  collectionView.dequeueReusableCellWithReuseIdentifier("numberCell", forIndexPath: indexPath) as! NumberCell
+        
+        cell.label.text = String(indexPath.item + 2)
+        
+        
+        if nonPrimeNumbers.contains(indexPath.item + 2){
+            cell.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+        } else{
+            cell.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
+        }
+        
+        return cell
+        
     }
 
 }
