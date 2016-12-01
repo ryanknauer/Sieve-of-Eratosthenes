@@ -15,38 +15,25 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     var primeNumbers : [Int] = []
     var primeArray : [Bool] = []
     var textField : UITextField!
+    var textFieldWidth : CGFloat!
+    var textFieldHeight : CGFloat!
+    var instructionsLabel : UILabel = UILabel()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor.whiteColor()
-        
-        let tfWidth : CGFloat = self.view.frame.width * (0.9)
-        let textFieldFrame = CGRect(x: (self.view.frame.width / 2) - (tfWidth / 2), y: self.view.frame.height / 2, width: tfWidth, height: 50)
-        textField = UITextField(frame: textFieldFrame)
-        textField.placeholder = "Insert Number to Find All Primes Smaller It"
-        textField.returnKeyType = .Done
-        textField.borderStyle = UITextBorderStyle.RoundedRect
-        textField.autocorrectionType = UITextAutocorrectionType.No
-        textField.clearButtonMode = UITextFieldViewMode.WhileEditing
-        textField.layer.borderWidth = 1
-        textField.layer.cornerRadius = 8
-        textField.delegate = self
-        
-
-        
-        collectionViewSize = 100
+        collectionViewSize = 0
         setupCollectionView()
         
-        view.addSubview(textField)
-        
-    }
-    
-    override func viewDidAppear(animated: Bool) {
 
-//        view.addSubview(numbersCollection)
-//        runSievesAlgo()
+        
+        setupInstructionsLabel()
+        view.addSubview(instructionsLabel)
+        
+        setupTextField()
+        view.addSubview(textField)
     }
     
     
@@ -57,7 +44,7 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        let cell =  collectionView.dequeueReusableCellWithReuseIdentifier("numberCell", forIndexPath: indexPath) as! numberCell
+        let cell =  collectionView.dequeueReusableCellWithReuseIdentifier("numberCell", forIndexPath: indexPath) as! NumberCell
         
         cell.label.text = String(indexPath.item + 2)
         
@@ -68,7 +55,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
             cell.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
         }
         
-
         return cell
         
     }
@@ -78,55 +64,38 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         
     }
     
-
     
     func runSievesAlgo(){
-        
         var sqrtN = sqrt(Double(collectionViewSize))
+        
         if sqrtN % 1 == 0{
             sqrtN -= 1
         } else {
             sqrtN = round(sqrtN)
         }
         
-        var delayTime : NSTimeInterval = 1
-        let delayTimeChange : NSTimeInterval = 0.3
-        
         for i in 2...Int(sqrtN){
-            let indexPath = NSIndexPath(forItem: i - 2, inSection: 0)
-            let cell = numbersCollection.cellForItemAtIndexPath(indexPath) as! numberCell
-            if cell.prime{
-                var iSquared = Int(pow(Double(i), 2.0))
+            if !nonPrimeNumbers.contains(i - 2){
+                let iSquared = Int(pow(Double(i), 2.0))
                 var j = iSquared
                 var k = 0
-                
-                print("In for loop")
-                
                 while j < collectionViewSize{
-                    
-                    print("In while loop")
-                    
                     let a = j
-                    delayTime += delayTimeChange
-                    let newDelay = delayTime
-                    let delay = dispatch_time(DISPATCH_TIME_NOW,
-                        Int64(newDelay * Double(NSEC_PER_SEC)))
-                    
-                    usleep(5000)
+                    let sleepTime = 500000 / collectionViewSize
+                    usleep(UInt32(sleepTime))
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.removeItemAtIndex(a)
                     })
-                    
-                    
-//                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, delay)
-
-//                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {self.removeItemAtIndex(a)})
                     k++
                     j =  iSquared + (k*i)
                     
                 }
                 
             }
+        }
+        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(slideIOAnimationDuration * Double(NSEC_PER_SEC)))
+        dispatch_after(delay, dispatch_get_main_queue()) {
+            self.showLabeles()
         }
     }
     
@@ -135,50 +104,108 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
         textField.endEditing(true)
-        do {
-            let numString = textField.text
-            if let num : Int = try Int(numString!) {
-                //collectionViewSize = num
-                
-                let qualityOfServiceClass = QOS_CLASS_BACKGROUND
-                let backgroundQueue = dispatch_get_global_queue(qualityOfServiceClass, 0)
-                dispatch_async(backgroundQueue, {
-                    self.runSievesAlgo()
-                })
-                
-                return true
-            }
-        }catch {
-            print("Please insert an int")
-            
+        nonPrimeNumbers = []
+        
+        let numString = textField.text
+        if let num : Int = Int(numString!) {
+            hideLabels()
+            collectionViewSize = num
+            numbersCollection.reloadData()
+            let qualityOfServiceClass = QOS_CLASS_BACKGROUND
+            let backgroundQueue = dispatch_get_global_queue(qualityOfServiceClass, 0)
+            dispatch_async(backgroundQueue, {
+                self.runSievesAlgo()
+            })
+        } else {
+            print("invalid input")
         }
+        
         return true
     }
     
     
-    
     func removeItemAtIndex(i : Int){
-        print("here\(i)")
         nonPrimeNumbers.append(i)
         let indexPath = NSIndexPath(forItem: i - 2, inSection: 0)
         numbersCollection.reloadItemsAtIndexPaths([indexPath])
+        
     }
+    
     
     func setupCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         flowLayout.itemSize = CGSize(width: 50, height: 50)
         
-        
-        numbersCollection = UICollectionView(frame: self.view.frame, collectionViewLayout: flowLayout)
+        let frame = view.frame
+        numbersCollection = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
         numbersCollection.delegate = self
         numbersCollection.dataSource = self
-        numbersCollection.registerClass(numberCell.self, forCellWithReuseIdentifier: "numberCell")
+        numbersCollection.registerClass(NumberCell.self, forCellWithReuseIdentifier: "numberCell")
         numbersCollection.backgroundColor = UIColor.whiteColor()
         view.addSubview(numbersCollection)
     }
-
-
+    
+    
+    func slideInAllCells(){
+        CATransaction.begin()
+        for i in 0..<collectionViewSize{
+            let index = NSIndexPath(forItem: i, inSection: 0)
+            if let cell = numbersCollection.cellForItemAtIndexPath(index){
+                if  (i % 2 == 0){
+                    self.slideInAnimation(cell, inFrom: .top, slideOut: false)
+                }else{
+                    self.slideInAnimation(cell, inFrom: .bottom, slideOut: false)
+                }
+                
+            }
+            
+        }
+        numbersCollection.hidden = false
+        CATransaction.commit()
+    }
+    
+    
+    func setupTextField(){
+        textFieldWidth = view.frame.width
+        textFieldHeight = 50
+        let textFieldFrame = CGRect(x: 0, y: instructionsLabel.frame.origin.y + instructionsLabel.frame.height, width: textFieldWidth, height: textFieldHeight)
+        textField = UITextField(frame: textFieldFrame)
+        textField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.65)
+        textField.placeholder = "Insert Number to Find All Primes Smaller It"
+        textField.returnKeyType = .Done
+        textField.borderStyle = UITextBorderStyle.RoundedRect
+        textField.autocorrectionType = UITextAutocorrectionType.No
+        textField.clearButtonMode = UITextFieldViewMode.WhileEditing
+        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 8
+        textField.textAlignment = .Center
+        textField.delegate = self
+    }
+    
+    
+    func hideLabels(){
+        slideInAnimation(textField, inFrom: .bottom, slideOut: true)
+        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: true)
+    }
+    
+    
+    func showLabeles(){
+        textField.text = ""
+        slideInAnimation(textField, inFrom: .bottom, slideOut: false)
+        slideInAnimation(instructionsLabel, inFrom: .top, slideOut: false)
+    }
+    
+    
+    func setupInstructionsLabel(){
+        instructionsLabel.frame.size = CGSize(width: view.frame.width, height: view.frame.height / 6)
+        instructionsLabel.center = view.center
+        instructionsLabel.text = "Please Insert A Number:"
+        instructionsLabel.textAlignment = .Center
+        instructionsLabel.numberOfLines = 0
+        instructionsLabel.font = UIFont(name: "Helvetica", size: 25)
+        instructionsLabel.textColor = UIColor.blackColor().colorWithAlphaComponent(0.65)
+    }
 
 }
 

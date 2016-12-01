@@ -7,16 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A893CFFB1DED28E60087BCE2 /* SlideAnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893CFFA1DED28E60087BCE2 /* SlideAnimationExtension.swift */; };
 		A8BA97C91DE6CF9D00D3E29E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97C81DE6CF9D00D3E29E /* AppDelegate.swift */; };
 		A8BA97CB1DE6CF9D00D3E29E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97CA1DE6CF9D00D3E29E /* ViewController.swift */; };
 		A8BA97CE1DE6CF9D00D3E29E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8BA97CC1DE6CF9D00D3E29E /* Main.storyboard */; };
 		A8BA97D01DE6CF9D00D3E29E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8BA97CF1DE6CF9D00D3E29E /* Assets.xcassets */; };
 		A8BA97D31DE6CF9D00D3E29E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8BA97D11DE6CF9D00D3E29E /* LaunchScreen.storyboard */; };
 		A8BA97DB1DE6D02B00D3E29E /* numberCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97DA1DE6D02B00D3E29E /* numberCollection.swift */; };
-		A8BA97DD1DE6DBE600D3E29E /* numberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97DC1DE6DBE600D3E29E /* numberCell.swift */; };
+		A8BA97DD1DE6DBE600D3E29E /* NumberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97DC1DE6DBE600D3E29E /* NumberCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A893CFFA1DED28E60087BCE2 /* SlideAnimationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationExtension.swift; sourceTree = "<group>"; };
 		A8BA97C51DE6CF9D00D3E29E /* Sieve of Eratosthenes Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sieve of Eratosthenes Application.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8BA97C81DE6CF9D00D3E29E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8BA97CA1DE6CF9D00D3E29E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -25,7 +27,7 @@
 		A8BA97D21DE6CF9D00D3E29E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8BA97D41DE6CF9D00D3E29E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A8BA97DA1DE6D02B00D3E29E /* numberCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = numberCollection.swift; sourceTree = "<group>"; };
-		A8BA97DC1DE6DBE600D3E29E /* numberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = numberCell.swift; sourceTree = "<group>"; };
+		A8BA97DC1DE6DBE600D3E29E /* NumberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +62,8 @@
 			children = (
 				A8BA97C81DE6CF9D00D3E29E /* AppDelegate.swift */,
 				A8BA97CA1DE6CF9D00D3E29E /* ViewController.swift */,
-				A8BA97DC1DE6DBE600D3E29E /* numberCell.swift */,
+				A893CFFA1DED28E60087BCE2 /* SlideAnimationExtension.swift */,
+				A8BA97DC1DE6DBE600D3E29E /* NumberCell.swift */,
 				A8BA97CC1DE6CF9D00D3E29E /* Main.storyboard */,
 				A8BA97CF1DE6CF9D00D3E29E /* Assets.xcassets */,
 				A8BA97D11DE6CF9D00D3E29E /* LaunchScreen.storyboard */,
@@ -142,9 +145,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8BA97DD1DE6DBE600D3E29E /* numberCell.swift in Sources */,
+				A8BA97DD1DE6DBE600D3E29E /* NumberCell.swift in Sources */,
 				A8BA97CB1DE6CF9D00D3E29E /* ViewController.swift in Sources */,
 				A8BA97C91DE6CF9D00D3E29E /* AppDelegate.swift in Sources */,
+				A893CFFB1DED28E60087BCE2 /* SlideAnimationExtension.swift in Sources */,
 				A8BA97DB1DE6D02B00D3E29E /* numberCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +297,7 @@
 				A8BA97D91DE6CF9D00D3E29E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class numberCell: UICollectionViewCell {
+class NumberCell: UICollectionViewCell {
     let label = UILabel()
     var prime = true
     
