@@ -75,7 +75,7 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
                 let iSquared = Int(pow(Double(i), 2.0))
                 var j = iSquared
                 var k = 0
-                while j < collectionViewSize{
+                while j <= collectionViewSize{
                     let a = j
                     let sleepTime = 500000 / collectionViewSize
                     usleep(UInt32(sleepTime))
@@ -194,8 +194,9 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     
     
     func setupInstructionsLabel(){
-        instructionsLabel.frame.size = CGSize(width: view.frame.width, height: view.frame.height / 6)
-        instructionsLabel.center = view.center
+        let labelHeight = view.frame.height / 7
+        let labelY = (view.frame.height / 2) - labelHeight
+        instructionsLabel.frame = CGRect(x: 0, y: labelY, width: view.frame.width, height: view.frame.height / 7)
         instructionsLabel.text = "Please Insert A Number:"
         instructionsLabel.textAlignment = .Center
         instructionsLabel.numberOfLines = 0
