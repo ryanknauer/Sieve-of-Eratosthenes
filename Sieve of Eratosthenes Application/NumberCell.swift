@@ -19,9 +19,7 @@ class NumberCell: UICollectionViewCell {
         label.text = "00"
         label.textColor = UIColor.whiteColor()
         label.textAlignment = .Center
-        
         self.addSubview(label)
-        
     }
 
     required init?(coder aDecoder: NSCoder) {

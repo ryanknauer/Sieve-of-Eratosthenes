@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,  UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate {
+class SievesViewController: UIViewController,  UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate {
     var collectionViewSize : Int!
     var numbersCollection : UICollectionView!
     var nonPrimeNumbers : [Int] = []
@@ -22,7 +22,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = UIColor.whiteColor()
         collectionViewSize = 0
         
@@ -69,6 +68,7 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
                 
             }
         }
+        
         let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(slideIOAnimationDuration * Double(NSEC_PER_SEC)))
         dispatch_after(delay, dispatch_get_main_queue()) {
             self.showLabeles()
@@ -77,10 +77,8 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        
         textField.endEditing(true)
         nonPrimeNumbers = []
-        
         let numString = textField.text
         if let num : Int = Int(numString!) {
             hideLabels()
@@ -94,7 +92,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         } else {
             print("invalid input")
         }
-        
         return true
     }
     
@@ -144,7 +141,6 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         flowLayout.itemSize = CGSize(width: 50, height: 50)
         
-        let frame = view.frame
         numbersCollection = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
         numbersCollection.delegate = self
         numbersCollection.dataSource = self
@@ -168,7 +164,8 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
     func setupTextField(){
         textFieldWidth = view.frame.width
         textFieldHeight = 50
-        let textFieldFrame = CGRect(x: 0, y: instructionsLabel.frame.origin.y + instructionsLabel.frame.height, width: textFieldWidth, height: textFieldHeight)
+        let textFieldFrame = CGRect(x: 0, y: instructionsLabel.frame.origin.y + instructionsLabel.frame.height,
+            width: textFieldWidth, height: textFieldHeight)
         textField = UITextField(frame: textFieldFrame)
         textField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.65)
         textField.placeholder = "Insert Number to Find All Primes Smaller It"
@@ -181,11 +178,10 @@ class ViewController: UIViewController,  UICollectionViewDataSource, UICollectio
         textField.textAlignment = .Center
         textField.delegate = self
     }
-
 }
 
 
-extension ViewController {
+extension SievesViewController {
     
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -196,10 +192,8 @@ extension ViewController {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         let cell =  collectionView.dequeueReusableCellWithReuseIdentifier("numberCell", forIndexPath: indexPath) as! NumberCell
-        
         cell.label.text = String(indexPath.item + 2)
-        
-        
+    
         if nonPrimeNumbers.contains(indexPath.item + 2){
             cell.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.5)
         } else{
